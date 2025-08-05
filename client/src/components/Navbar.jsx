@@ -1,12 +1,22 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { assets } from '../assets/assets'
-import { SearchIcon, XIcon, MenuIcon, Scroll } from 'lucide-react'
+import { SearchIcon, XIcon, MenuIcon, Scroll, TicketPlus } from 'lucide-react'
 import Button from './Button'
 import { useState } from 'react'
 
+import { useUser, useClerk, UserButton } from '@clerk/clerk-react'
+
+
+
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  
+  // Get User information => Null if not logged in/ Object if logged in
+  const { user } = useUser()
+
+  // Open Sign In / Sign Up Modal
+  const { openSignIn } = useClerk()
 
   const handleMenuToggle = () => {
     setIsMenuOpen((prev) => !prev)
@@ -38,7 +48,16 @@ const Navbar = () => {
         {/* Search & Login Button */}
         <div className='flex items-center gap-8'>
           <SearchIcon className='max-md:hidden w-6 h-6 cursor-pointer'/>
-          <Button title="Login" classContainer="px-4 py-1 sm:px-7 bg-primary hover:bg-primary-dull transition rounded-full font-medium cursor-pointer"/>
+          {!user ? (
+            <Button onClick={openSignIn} title="Login" classContainer="px-4 py-1 sm:px-7 bg-primary hover:bg-primary-dull transition rounded-full font-medium cursor-pointer"/>       
+          ):(
+            <UserButton>
+              <UserButton.MenuItems>
+                <UserButton.Action label="My Bookings" labelIcon={<TicketPlus/>}/>
+              </UserButton.MenuItems>
+            </UserButton>
+          )}
+         
         </div>
 
         {/* Menu Icon */}
