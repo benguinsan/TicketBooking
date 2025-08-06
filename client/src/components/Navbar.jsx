@@ -6,7 +6,7 @@ import Button from './Button'
 import { useState } from 'react'
 
 import { useUser, useClerk, UserButton } from '@clerk/clerk-react'
-
+import { useNavigate } from 'react-router-dom'
 
 
 const Navbar = () => {
@@ -17,6 +17,9 @@ const Navbar = () => {
 
   // Open Sign In / Sign Up Modal
   const { openSignIn } = useClerk()
+
+  // Navigate to My Bookings Page
+  const navigate = useNavigate()
 
   const handleMenuToggle = () => {
     setIsMenuOpen((prev) => !prev)
@@ -53,7 +56,7 @@ const Navbar = () => {
           ):(
             <UserButton>
               <UserButton.MenuItems>
-                <UserButton.Action label="My Bookings" labelIcon={<TicketPlus/>}/>
+                <UserButton.Action label="My Bookings" labelIcon={<TicketPlus width={15}/>} onClick={() => navigate("/my-bookings")}/>
               </UserButton.MenuItems>
             </UserButton>
           )}
