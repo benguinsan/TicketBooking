@@ -22,8 +22,8 @@ function App() {
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/movies' element={<Movies />} />
-        <Route path='/movie/:id' element={<MovieDetails />} />
-        <Route path='/movie/:id/:date' element={<SeatLayout />} />
+        <Route path='/movies/:id' element={<MovieDetails />} />
+        <Route path='/movies/:id/:date' element={<SeatLayout />} />
         <Route path='/my-booking' element={<MyBookings />} />
         <Route path='/favorite' element={<Favorite />} />
       </Routes>
