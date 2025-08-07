@@ -25,7 +25,7 @@ function App() {
         <Route path='/movie/:id' element={<MovieDetails />} />
         <Route path='/movie/:id/:date' element={<SeatLayout />} />
         <Route path='/my-booking' element={<MyBookings />} />
-        <Route path='/favourites' element={<Favorite />} />
+        <Route path='/favorite' element={<Favorite />} />
       </Routes>
       {/* if the route is not an admin route, show the footer */}
       {!isAdminRoute && <Footer />}
