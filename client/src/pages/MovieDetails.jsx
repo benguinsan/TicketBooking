@@ -1,15 +1,20 @@
 import React, { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import { dummyDateTimeData, dummyShowsData } from '../assets/assets'
 import BlurCircle from '../components/BlurCircle'
 import { StarIcon, PlayCircleIcon, HeartIcon} from 'lucide-react'
 import timeFormat from '../lib/timeFormat'
 import Button from '../components/Button'
 import DateSelect from '../components/DateSelect'
+import MovieCard from '../components/MovieCard'
+import Loading from '../components/Loading'
+
 
 
 
 const MovieDetails = () => {
+
+  const navigate = useNavigate()
 
   // Get the id from the url
   const {id} = useParams()
@@ -20,10 +25,12 @@ const MovieDetails = () => {
   // Get the show and date time data
   const getShow = async () => {
     const show = dummyShowsData.find((show) => show._id === id)
-    setShow({
-      movie: show,
-      dateTime: dummyDateTimeData
-    })
+    if(show) {
+      setShow({
+        movie: show,
+        dateTime: dummyDateTimeData
+      })
+    }
   }
 
   // Get the new show and date time data when the id changes
@@ -85,17 +92,24 @@ const MovieDetails = () => {
         </div>
       </div>
 
-      <DateSelect dateTime={show.dateTime} id={id} />
       {/* Showtimes */}
-      {/* <p className='text-xl font-semibold mt-16 text-gray-300'>
-        Showtimes
-      </p> */}
-      <div className='mt-8'>
-        <div></div>
+      <DateSelect dateTime={show.dateTime} id={id} />
+
+      {/* You may also like */}
+      <p className='text-lg font-medium mt-20 mb-8 text-gray-300'>
+        You May Also Like
+      </p>
+      <div className='flex flex-wrap max-sm:justify-center gap-4 gap-8'>
+        {dummyShowsData.slice(0,4).map((movie, index) => (
+          <MovieCard key={index} movie={movie} />
+        ))}
+      </div>
+      <div className='flex justify-center mt-20'>
+        <Button onClick={() => {navigate('/movies'); scrollTo(0,0)}} title="Show more" classContainer="bg-primary hover:bg-primary-dull text-white px-10 py-3 text-sm font-medium rounded-md cursor-pointer active:scale-95" />
       </div>
     </div>
   ) : (
-    <div>Loading...</div>
+    <Loading />
   )
 }
 
