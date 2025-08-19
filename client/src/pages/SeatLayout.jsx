@@ -9,6 +9,8 @@ import isoTimeFormat from '../lib/isoTimeFormat'
 import BlurCircle from '../components/BlurCircle'
 import { assets } from '../assets/assets'
 import { toast } from 'react-hot-toast'
+import Button from '../components/Button'
+import { ArrowRightIcon } from 'lucide-react'
 
 const SeatLayout = () => {
   const groupRows = [["A", "B"], ["C", "D"], ["E", "F"], ["G", "H"], ["I", "J"]]
@@ -41,7 +43,6 @@ const SeatLayout = () => {
 
     // Check if the seat is already selected (includes()), if yes, remove it (filter()), if no, add it (spread operator)
     setSelectedSeats((prev) => prev.includes(seatId) ? prev.filter((seat) => seat !== seatId) : [...prev, seatId])
-
   }
 
   // Render seats
@@ -49,14 +50,14 @@ const SeatLayout = () => {
     <div key={row} className='flex gap-2 mt-2'>
       <div className='flex flex-wrap items-center justify-center gap-2'>
         {Array.from({length: count}).map((_, i) => {
-          const seatId = `${row}-${i + 1}`;
+          const seatId = `${row}${i + 1}`;
           return (
-            <button 
+            <Button 
               key={seatId} 
               onClick={() => handleSeatClick(seatId)} 
-              className={`h-8 w-8 rounded border border-primary/60 cursor-pointer ${selectedSeats.includes(seatId) && "bg-primary text-white"}`}>
-                {seatId}
-            </button>
+              classContainer={`h-8 w-8 rounded border border-primary/60 cursor-pointer ${selectedSeats.includes(seatId) && "bg-primary text-white"}`}
+              title={seatId}
+            />
           )
         })}
       </div>
@@ -95,10 +96,28 @@ const SeatLayout = () => {
           
           {/* Seat layout */}
           <div className='flex flex-col items-center mt-10 text-xs text-gray-300'>
-            <div className=''>
+            <div className='grid grid-cols-2 md:grid-cols-1 gap-8 md:gap-2 mb-6'>
               {groupRows[0].map((row) => renderSeats(row))}
             </div>
+
+            <div className='grid grid-cols-2 gap-11'> 
+              {groupRows.slice(1).map((group, index) => (
+                <div key={index}>
+                  {group.map((row) => renderSeats(row))}
+                </div>
+              ))}
+            </div>
           </div>
+
+          {/* Process checkout */}
+          <Button 
+            title="Proceed to checkout" 
+            children={<ArrowRightIcon strokeWidth={4} className='w-4 h-4'/>}
+            classContainer="flex items-center justify-center gap-1 mt-20 px-10 py-3 text-sm bg-primary hover:bg-primary-dull transition rounded-full font-medium cursor-pointer active:scale-95"
+            onClick={() => navigate('/my-bookings')}
+          />
+          
+        
       </div>
     </div>
   ) : (
