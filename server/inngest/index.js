@@ -7,13 +7,10 @@ export const inngest = new Inngest({ id: "movie-ticket-booking" });
 
 // Inngest Functions to save user to database
 const syncUserCreation = inngest.createFunction(
-    {id: "sync-user-creation-with-clerk"},
+    {id: "create-user-with-clerk"},
     // Function to run when user is created (event user.created is triggered when user is created)
-    {event: "user.created"},
-    async({event}) => {
-        // Connect to database
-        await connectDB();
-        
+    {event: "clerk/user.created"},
+    async({event}) => {        
         const {id, first_name, last_name, email_addresses, image_url} = event.data;
         const userData = {
             _id: id,
@@ -27,25 +24,19 @@ const syncUserCreation = inngest.createFunction(
 
 // Inngest Functions to delete user from database
 const syncUserDeletion = inngest.createFunction(
-    {id: "sync-user-deletion-with-clerk"},
-    {event: "user.deleted"},
-    async({event}) => {
-        // Connect to database
-        await connectDB();
-        
+    {id: "delete-user-with-clerk"},
+    {event: "clerk/user.deleted"},
+    async({event}) => {      
         const {id} = event.data;
-        await User.findOneAndDelete({_id: id});
+        await User.findByIdAndDelete(id);
     }
 )
 
 // Inngest Functions to update user in database
 const syncUserUpdation = inngest.createFunction(
-    {id: "sync-user-update-with-clerk"},
-    {event: "user.updated"},
+    {id: "update-user-with-clerk"},
+    {event: "clerk/user.updated"},
     async({event}) => {
-        // Connect to database
-        await connectDB();
-        
         const {id, first_name, last_name, email_addresses, image_url} = event.data;
         const userData = {
             _id: id,
@@ -53,7 +44,7 @@ const syncUserUpdation = inngest.createFunction(
             email: email_addresses[0].email_address,
             image: image_url,
         }
-        await User.findOneAndUpdate({_id: id}, userData);
+        await User.findByIdAndUpdate(id, userData);
     }
 )       
 
