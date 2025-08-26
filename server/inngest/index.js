@@ -1,5 +1,6 @@
 import { Inngest } from "inngest";
 import User from "../models/User.js";
+import connectDB from "../configs/db.js";
 
 // Create a client to send and receive events
 export const inngest = new Inngest({ id: "movie-ticket-booking" });
@@ -10,6 +11,9 @@ const syncUserCreation = inngest.createFunction(
     // Function to run when user is created (event user.created is triggered when user is created)
     {event: "user.created"},
     async({event}) => {
+        // Connect to database
+        await connectDB();
+        
         const {id, first_name, last_name, email_addresses, image_url} = event.data;
         const userData = {
             _id: id,
@@ -26,8 +30,11 @@ const syncUserDeletion = inngest.createFunction(
     {id: "sync-user-deletion-with-clerk"},
     {event: "user.deleted"},
     async({event}) => {
+        // Connect to database
+        await connectDB();
+        
         const {id} = event.data;
-        await User.findOneAndDelete(id);
+        await User.findOneAndDelete({_id: id});
     }
 )
 
@@ -36,6 +43,9 @@ const syncUserUpdation = inngest.createFunction(
     {id: "sync-user-update-with-clerk"},
     {event: "user.updated"},
     async({event}) => {
+        // Connect to database
+        await connectDB();
+        
         const {id, first_name, last_name, email_addresses, image_url} = event.data;
         const userData = {
             _id: id,
@@ -43,7 +53,7 @@ const syncUserUpdation = inngest.createFunction(
             email: email_addresses[0].email_address,
             image: image_url,
         }
-        await User.findOneAndUpdate(id, userData);
+        await User.findOneAndUpdate({_id: id}, userData);
     }
 )       
 
