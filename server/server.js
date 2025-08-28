@@ -9,6 +9,7 @@ import { inngest, functions } from "./inngest/index.js";
 import swaggerUi from "swagger-ui-express";
 import swaggerJSDoc from "swagger-jsdoc";
 import showRouter from "./routes/showRoutes.js";
+import bookingRouter from "./routes/bookingRoutes.js";
 
 const app = express();
 const port = 3000;
@@ -30,8 +31,16 @@ const options = {
       ],
       tags: [
         {
+          name: 'Admin',
+          description: 'Admin management endpoints'
+        },
+        {
           name: 'Shows',
           description: 'Show management endpoints'
+        },
+        {
+          name: 'Bookings',
+          description: 'Booking management endpoints'
         }
       ]
     },
@@ -54,6 +63,7 @@ app.get("/", (req, res) => res.send("Server is Live!"))
 app.use("/api/inngest", serve({ client: inngest, functions }));
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use("/api/show", showRouter);
+app.use("/api/booking", bookingRouter);
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);

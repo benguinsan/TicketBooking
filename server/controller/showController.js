@@ -96,7 +96,7 @@ export const addShow = async (req, res) => {
 }
 
 // get all movies that have shows
-export const getMoiveHasShow = async (req, res) => {
+export const getMovieHasShow = async (req, res) => {
     try{
         // Get shows have showDateTime >= current date and time ({showDateTime: {$gte: new Date()}})
         // Populate movie field with movie details (populate("movie"))
@@ -107,6 +107,35 @@ export const getMoiveHasShow = async (req, res) => {
         const uniqueShows = new Set(shows.map(show => show.movie))
 
         res.json({success: true, shows: Array.from(uniqueShows)});
+    } catch(error) {
+        console.log(error);
+        res.json({success: false, message: error.message});
+    }
+}
+
+// get single show from database
+export const getMovieSchedule = async (req, res) => {
+    try{
+        const {movieId} = req.params;
+
+        // get all upcomming shows for the movie
+        const shows = await Show.find({movie: movieId, showDateTime: {$gte: new Date()}});
+
+        // get movie details
+        const movie = await Movie.findById(movieId);
+
+        // create a object to store date and time of shows
+        const dateTime = {};
+
+        shows.forEach(show => {
+            const date = show.showDateTime.toISOString().split("T")[0];
+            if(!dateTime[date]){
+                dateTime[date] = [];
+            }
+            dateTime[date].push({time: show.showDateTime, showId: show._id});
+        })
+
+        res.json({success: true, movie, dateTime});
     } catch(error) {
         console.log(error);
         res.json({success: false, message: error.message});
