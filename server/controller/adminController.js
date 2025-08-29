@@ -1,9 +1,11 @@
 import Booking from "../models/Booking.js";
 import Show from "../models/Show.js";
 import User from "../models/User.js";
+import { clerkClient } from "@clerk/express";
 
 // API to check user is admin or not
-export const iskAdmin = async (req, res) => {
+export const isAdmin = async (req, res) => {
+    // Middleware protectAdmin đã check rồi, chỉ cần trả về true
     res.json({success: true, isAdmin: true});
 }
 

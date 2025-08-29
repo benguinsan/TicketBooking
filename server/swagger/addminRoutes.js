@@ -1,6 +1,6 @@
 /**
  * @swagger
- * /api/admin/check-admin:
+ * /api/admin/is-admin:
  *   get:
  *     summary: Check if user is admin
  *     description: Verify if the authenticated user has admin privileges

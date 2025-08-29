@@ -13,11 +13,15 @@ import Dashboard from './pages/Admin/Dashboard'
 import AddShows from './pages/Admin/AddShows'
 import ListShows from './pages/Admin/ListShows'
 import ListBookings from './pages/Admin/ListBookings'
+import { useAppContext } from './context/AppContext'
+import { SignIn } from '@clerk/clerk-react'
 
 function App() {
 
   // check if the route is an admin route
   const isAdminRoute = useLocation().pathname.includes('/admin')
+
+  const { user, isAdmin, isAdminLoading } = useAppContext();
 
   return (
     <>
@@ -32,7 +36,30 @@ function App() {
         <Route path='/my-bookings' element={<MyBookings />} />
         <Route path='/favorite' element={<Favorite />} />
         {/* Admin routes */}
-        <Route path='/admin/*' element={<Layout />}>
+        {/* Need admin loading state to avoid flash of content */}
+        <Route path='/admin/*' element={
+          !user ? (
+            <div className='min-h-screen flex items-center justify-center'>
+              <SignIn fallbackRedirectUrl={"/admin"} />
+            </div>
+          ) : isAdminLoading ? (
+            <div className='min-h-screen flex items-center justify-center'>
+              <div className='text-center'>
+                <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4'></div>
+                <p>Checking admin permissions...</p>
+              </div>
+            </div>
+          ) : isAdmin ? (
+            <Layout />
+          ) : (
+            <div className='min-h-screen flex items-center justify-center'>
+              <div className='text-center'>
+                <h2 className='text-xl font-semibold mb-2'>Access Denied</h2>
+                <p className='text-gray-400'>You don't have permission to access this page.</p>
+              </div>
+            </div>
+          )
+        }>
           <Route index element={<Dashboard />} />
           <Route path="add-shows" element={<AddShows />} />
           <Route path="list-shows" element={<ListShows />} />
