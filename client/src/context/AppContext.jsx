@@ -15,9 +15,7 @@ export const AppProvider = ({children}) => {
     const [shows, setShows] = useState([]);
     const [favoritesMovies, setFavoritesMovies] = useState([]);
 
-    console.log(isAdmin);
-    console.log(shows);
-    console.log(favoritesMovies);
+    const image_base_url = import.meta.env.VITE_TMDB_IMAGE_BASE_URL;
 
     const {user} = useUser();
     const {getToken} = useAuth();
@@ -103,6 +101,7 @@ export const AppProvider = ({children}) => {
         fetchFavoriteMovies,
         fetchIsAdmin,
         navigate,
+        image_base_url,
     }
     return (
         <AppContext.Provider value={value}>

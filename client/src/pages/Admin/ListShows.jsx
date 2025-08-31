@@ -3,36 +3,44 @@ import { dummyShowsData } from '../../assets/assets'
 import Title from '../../components/Admin/Title'
 import Loading from '../../components/Loading'
 import dateFormat from '../../lib/dateFormat'
+import { useAppContext } from '../../context/AppContext'
 
 const ListShows = () => {
-  const currency = import.meta.env.VITE_CURRENCY
+    const {axios, getToken, user, image_base_url} = useAppContext()
 
-  const [shows, setShows] = useState([])
-  const [isLoading, setIsLoading] = useState(true)
+    const currency = import.meta.env.VITE_CURRENCY
+
+    const [shows, setShows] = useState([])
+    const [isLoading, setIsLoading] = useState(true)
+
+    console.log(shows)
 
   const getAllShows = async () => {
     try {
-        setShows([
-            {
-                movie: dummyShowsData[0],
-                showDateTime: "2025-06-30T02:30:00.000Z",
-                showPrice: 59,
-                occupiedSeats: {
-                    A1: "user_1",
-                    B1: "user_2",
-                    C1: "user_3",
-                }
+        const {data} = await axios.get("/api/admin/all-shows", {
+            headers: {
+                Authorization: `Bearer ${await getToken()}`
             }
-        ]);
-        setIsLoading(false)
+        })
+
+        if(data.success){
+            setShows(data.shows)
+            setIsLoading(false)
+        } else {
+            toast.error(data.message)
+        }
+
     } catch (error) {
         console.log("Error fetching shows", error)
+        toast.error("An error occurred. Please try again")
     }
   }
 
   useEffect(() => {
-    getAllShows()
-  },[])
+    if(user){
+        getAllShows()
+    }
+  },[user])
 
     return !isLoading ? (
         <>
