@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { useUser, useAuth } from "@clerk/clerk-react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -14,6 +14,9 @@ export const AppProvider = ({children}) => {
     const [isAdminLoading, setIsAdminLoading] = useState(true);
     const [shows, setShows] = useState([]);
     const [favoritesMovies, setFavoritesMovies] = useState([]);
+    
+    // Ref to refresh dashboard data
+    const refreshDashboard = useRef(null);
 
     const image_base_url = import.meta.env.VITE_TMDB_IMAGE_BASE_URL;
 
@@ -96,12 +99,14 @@ export const AppProvider = ({children}) => {
         isAdminLoading,
         shows,
         user,
+        favoritesMovies,
         getToken,
         fetchShows,
         fetchFavoriteMovies,
         fetchIsAdmin,
         navigate,
         image_base_url,
+        refreshDashboard,
     }
     return (
         <AppContext.Provider value={value}>

@@ -7,9 +7,11 @@ import { useState } from 'react'
 
 import { useUser, useClerk, UserButton } from '@clerk/clerk-react'
 import { useNavigate } from 'react-router-dom'
-
+import { useAppContext } from '../context/AppContext'
 
 const Navbar = () => {
+  const {favoritesMovies} = useAppContext()
+
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   
   // Get User information => Null if not logged in/ Object if logged in
@@ -45,7 +47,7 @@ const Navbar = () => {
           <Link onClick={() => {scrollTo(0, 0); setIsMenuOpen(false)}}  to={"/movies"} className='text-lg font-medium'>Movies</Link>
           <Link onClick={() => {scrollTo(0, 0); setIsMenuOpen(false)}}  to={"/"} className='text-lg font-medium'>Theaters</Link>
           <Link onClick={() => {scrollTo(0, 0); setIsMenuOpen(false)}}  to={"/"} className='text-lg font-medium'>Releases</Link>
-          <Link onClick={() => {scrollTo(0, 0); setIsMenuOpen(false)}}  to={"/favorite"} className='text-lg font-medium'>Favorites</Link>
+          {favoritesMovies.length > 0 && <Link onClick={() => {scrollTo(0, 0); setIsMenuOpen(false)}}  to={"/favorite"} className='text-lg font-medium'>Favorites</Link>}
         </div>
 
         {/* Search & Login Button */}

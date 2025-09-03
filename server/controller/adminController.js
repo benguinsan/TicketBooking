@@ -13,6 +13,8 @@ export const isAdmin = async (req, res) => {
 export const getDashboardData = async (req, res) => {
     try {
         const bookings = await Booking.find({isPaid: true});
+
+        // Active shows are shows that have showDateTime in the future
         const activeShows = await Show.find({showDateTime: {$gte: new Date()}}).populate("movie");
 
         const totalUsers = await User.countDocuments();

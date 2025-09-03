@@ -9,7 +9,7 @@ import { useAppContext } from '../../context/AppContext'
 import { toast } from 'react-hot-toast'
 
 const Dashboard = () => {
-    const {axios, getToken, user, image_base_url} = useAppContext()
+    const {axios, getToken, user, image_base_url, refreshDashboard} = useAppContext()
     const currency = import.meta.env.VITE_CURRENCY
     
     const [dashboardData, setDashboardData] = useState({
@@ -18,8 +18,6 @@ const Dashboard = () => {
         activeShows: [],
         totalUsers: 0,
     })
-
-    console.log(dashboardData)
 
     const dashboardCards = [
         {title: "Total Bookings", value: dashboardData.totalBookings, icon: <ChartBarIcon/>},
@@ -32,6 +30,7 @@ const Dashboard = () => {
 
     const fetchDashboardData = async () => {
         try {
+            setIsLoading(true)
             const {data} = await axios.get("/api/admin/dashboard", {
                 headers: {
                     Authorization: `Bearer ${await getToken()}`
@@ -40,13 +39,15 @@ const Dashboard = () => {
 
             if(data.success){
                 setDashboardData(data.dashboardData)
-                setIsLoading(false)
             } else {
                 toast.error(data.message)
             }
 
         } catch(error){
             console.log("fetchDashboardData error:", error)
+            toast.error("Failed to fetch dashboard data")
+        } finally {
+            setIsLoading(false)
         }
     }
 
@@ -56,6 +57,13 @@ const Dashboard = () => {
             fetchDashboardData() 
         }
     },[user])
+
+    // Expose refresh function to context
+    useEffect(() => {
+        if (refreshDashboard) {
+            refreshDashboard.current = fetchDashboardData
+        }
+    }, [refreshDashboard])
 
     return !isLoading ? (
         <>

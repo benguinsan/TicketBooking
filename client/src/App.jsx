@@ -21,7 +21,7 @@ function App() {
   // check if the route is an admin route
   const isAdminRoute = useLocation().pathname.includes('/admin')
 
-  const { user, isAdmin, isAdminLoading } = useAppContext();
+  const { user } = useAppContext();
 
   return (
     <>

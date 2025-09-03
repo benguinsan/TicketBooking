@@ -10,7 +10,7 @@ export const protectAdmin = async (req, res, next) => {
 
         // Check if user is admin
         if(user.privateMetadata.role !== "admin") {
-            return res.json({success: false, message: "Unauthorized"});
+            return res.json({success: false, message: "Not authorized"});
         }
 
         next();

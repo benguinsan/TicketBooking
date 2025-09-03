@@ -44,6 +44,8 @@ export const addShow = async (req, res) => {
             const movieApiData = movieDetailsResponse.data;
             const movieCreditsData = movieCreditsResponse.data;
 
+            console.log(movieCreditsData)
+
             // Movie details to be stored in database
             const movieDetails = {
                 _id: movieId,
@@ -52,7 +54,7 @@ export const addShow = async (req, res) => {
                 poster_path: movieApiData.poster_path,
                 backdrop_path: movieApiData.backdrop_path,
                 genres: movieApiData.genres,
-                casts: movieCreditsData.cast,
+                casts: movieCreditsData.casts,
                 release_date: movieApiData.release_date,
                 original_language: movieApiData.original_language,
                 tagline: movieApiData.tagline || "",
@@ -101,6 +103,7 @@ export const getMovieHasShow = async (req, res) => {
         // Get shows have showDateTime >= current date and time ({showDateTime: {$gte: new Date()}})
         // Populate movie field with movie details (populate("movie"))
         // Sort shows by showDateTime in ascending order ({showDateTime: 1})
+        // Only get shows active (showDateTime >= current date and time)
         const shows = await Show.find({showDateTime: {$gte: new Date()}}).populate("movie").sort({showDateTime: 1});
         
         // Filter Unique Shows
