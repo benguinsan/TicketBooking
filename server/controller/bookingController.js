@@ -25,6 +25,7 @@ export const checkSeatAvailability = async (showId, selectedSeats) => {
 export const createBooking = async (req, res) => {
     try{
         const {userId} = req.auth();
+
         const {showId, selectedSeats} = req.body;
         // get origin from headers (frontend domain)
         const {origin} = req.headers;
@@ -43,7 +44,7 @@ export const createBooking = async (req, res) => {
         const createBooking = await Booking.create({
             user: userId,
             show: showId,
-            amount: selectedSeats.length * showData.price,
+            amount: selectedSeats.length * showData.showPrice,
             bookedSeats: selectedSeats,
         })
 

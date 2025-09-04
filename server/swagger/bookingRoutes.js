@@ -53,7 +53,7 @@
 
 /**
  * @swagger
- * /api/booking/occupied-seats/{showId}:
+ * /api/booking/seats/{showId}:
  *   get:
  *     summary: Get occupied seats for a show
  *     description: Get list of all occupied seats for a specific show

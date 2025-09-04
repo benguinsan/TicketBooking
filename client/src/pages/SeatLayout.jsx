@@ -11,8 +11,10 @@ import { assets } from '../assets/assets'
 import { toast } from 'react-hot-toast'
 import Button from '../components/Button'
 import { ArrowRightIcon } from 'lucide-react'
+import { useAppContext } from '../context/AppContext'
 
 const SeatLayout = () => {
+  const {axios, getToken, user} = useAppContext()
   const groupRows = [["A", "B"], ["C", "D"], ["E", "F"], ["G", "H"], ["I", "J"]]
 
   const {id, date} = useParams()
@@ -21,15 +23,43 @@ const SeatLayout = () => {
   const [selectedSeats, setSelectedSeats] = useState([])
   const [selectedTime, setSelectedTime] = useState(null)
   const [show, setShow] = useState(null)
+  const [occupiedSeats, setOccupiedSeats] = useState([])
+
   
   // Get the show and date time data
   const getShow = async () => {
-    const show = dummyShowsData.find((show) => show._id === id)
-    if(show) {
-      setShow({
-        movie: show,
-        dateTime: dummyDateTimeData
+    try {
+      const {data} = await axios.get(`/api/show/${id}`, {
+        headers: {
+          Authorization: `Bearer ${await getToken()}`
+        }
       })
+
+      if(data.success) {
+        setShow(data)
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  // Get occupied seats
+  const getOccupiedSeats = async () => {
+    try {
+      const {data} = await axios.get(`/api/booking/seats/${selectedTime.showId}`, {
+        headers: {
+          Authorization: `Bearer ${await getToken()}`
+        }
+      })
+
+      if(data.success) {
+        setOccupiedSeats(data.occupiedSeats)
+      } else {
+        toast.error(data.message)
+      }
+
+    } catch(error) {
+      console.log(error)
     }
   }
 
@@ -41,8 +71,40 @@ const SeatLayout = () => {
       return toast.error("You can only select up to 5 seats")
     }
 
+    if(occupiedSeats.includes(seatId)) {
+      return toast.error("This seat is already blocked")
+    }
+
     // Check if the seat is already selected (includes()), if yes, remove it (filter()), if no, add it (spread operator)
     setSelectedSeats((prev) => prev.includes(seatId) ? prev.filter((seat) => seat !== seatId) : [...prev, seatId])
+  }
+
+  // Booking seats
+  const bookTickets = async () => {
+    try {
+      if(!user) return toast.error("Please login to book tickets")
+
+      if(!selectedTime || selectedSeats.length === 0) return toast.error("Please select time and seats first")
+      
+      const {data} = await axios.post('/api/booking/create-booking', {
+        showId: selectedTime.showId,
+        selectedSeats
+      }, {
+        headers: {
+          Authorization: `Bearer ${await getToken()}`
+        }
+      })
+
+      if(data.success) {
+        toast.success("Booking created successfully")
+        navigate('/my-bookings')
+      } else {
+        toast.error(data.message)
+      }
+
+    } catch(error) {
+      console.log(error)
+    }
   }
 
   // Render seats
@@ -55,7 +117,9 @@ const SeatLayout = () => {
             <Button 
               key={seatId} 
               onClick={() => handleSeatClick(seatId)} 
-              classContainer={`h-8 w-8 rounded border border-primary/60 cursor-pointer ${selectedSeats.includes(seatId) && "bg-primary text-white"}`}
+              classContainer={`h-8 w-8 rounded border border-primary/60 cursor-pointer ${selectedSeats.includes(seatId) && "bg-primary text-white"} 
+              ${occupiedSeats.includes(seatId) && "bg-primary/20 opacity-50"}
+              `}
               title={seatId}
             />
           )
@@ -67,6 +131,12 @@ const SeatLayout = () => {
   useEffect(() => {
     getShow()
   },[])
+
+  useEffect(() => {
+    if(selectedTime) {
+      getOccupiedSeats()
+    }
+  },[selectedTime])
 
   return show ? (
     <div className='flex flex-col md:flex-row px-6 md:px-16 lg:px-40 py-30 md:pt-50'>
@@ -114,7 +184,7 @@ const SeatLayout = () => {
             title="Proceed to checkout" 
             children={<ArrowRightIcon strokeWidth={4} className='w-4 h-4'/>}
             classContainer="flex items-center justify-center gap-1 mt-20 px-10 py-3 text-sm bg-primary hover:bg-primary-dull transition rounded-full font-medium cursor-pointer active:scale-95"
-            onClick={() => navigate('/my-bookings')}
+            onClick={bookTickets}
           />
           
         

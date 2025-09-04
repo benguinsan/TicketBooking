@@ -14,7 +14,7 @@ export const getUserBookings = async (req, res) => {
             return res.status(404).json({success: false, message: "User not found"});
         }
 
-        const bookings = await Booking.find({userId}).populate({path: "show", populate: {path: "movie"}}).sort({createdAt: -1});
+        const bookings = await Booking.find({user: userId}).populate({path: "show", populate: {path: "movie"}}).sort({createdAt: -1});
 
         res.json({success: true, bookings});
 

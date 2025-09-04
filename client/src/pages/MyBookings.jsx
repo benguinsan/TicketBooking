@@ -9,10 +9,12 @@ import { useAppContext } from '../context/AppContext'
 
 const MyBooking = () => {
   const currency = import.meta.env.VITE_CURRENCY
-  const {axios, getToken, user, shows, image_base_url, fetchFavoriteMovies, favoritesMovies} = useAppContext()
+  const {axios, getToken, user, image_base_url} = useAppContext()
 
   const [bookings, setBookings] = useState([])
   const [isLoading, setIsLoading] = useState(true)
+
+  console.log(bookings)
 
   const getBookings = async () => {
     try {
@@ -46,7 +48,6 @@ const MyBooking = () => {
       </div>
       <h1 className='text-lg font-semibold mb-4'>My Bookings</h1>
       {
-        bookings.length > 0 ? (
           bookings.map((item, index) => (
             <div key={index} className='flex flex-col md:flex-row justify-between bg-primary/8 border border-primary/20 rounded-lg mt-4 p-2 max-w-3xl'> 
               {/* Left side - Movie Info */}
@@ -71,9 +72,6 @@ const MyBooking = () => {
               </div>
             </div>
           ))
-        ) : (
-          <p className='text-gray-400 text-center text-lg'>No bookings found</p>
-        )
       }
     </div>
   ) : (
