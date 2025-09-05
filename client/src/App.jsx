@@ -15,6 +15,7 @@ import ListShows from './pages/Admin/ListShows'
 import ListBookings from './pages/Admin/ListBookings'
 import { useAppContext } from './context/AppContext'
 import { SignIn } from '@clerk/clerk-react'
+import Loading from './components/Loading'
 
 function App() {
 
@@ -34,6 +35,8 @@ function App() {
         <Route path='/movies/:id' element={<MovieDetails />} />
         <Route path='/movies/:id/:date' element={<SeatLayout />} />
         <Route path='/my-bookings' element={<MyBookings />} />
+        {/* Loading when Stripe payment is successful */}
+        <Route path='/loading/:nextUrl' element={<Loading />} />
         <Route path='/favorite' element={<Favorite />} />
         {/* Admin routes */}
         <Route path='/admin/*' element={user ? <Layout /> : (

@@ -24,7 +24,6 @@ const SeatLayout = () => {
   const [selectedTime, setSelectedTime] = useState(null)
   const [show, setShow] = useState(null)
   const [occupiedSeats, setOccupiedSeats] = useState([])
-
   
   // Get the show and date time data
   const getShow = async () => {
@@ -96,8 +95,7 @@ const SeatLayout = () => {
       })
 
       if(data.success) {
-        toast.success("Booking created successfully")
-        navigate('/my-bookings')
+        window.location.href = data.url;
       } else {
         toast.error(data.message)
       }
@@ -138,6 +136,7 @@ const SeatLayout = () => {
     }
   },[selectedTime])
 
+  
   return show ? (
     <div className='flex flex-col md:flex-row px-6 md:px-16 lg:px-40 py-30 md:pt-50'>
       {/* Available timings */}
