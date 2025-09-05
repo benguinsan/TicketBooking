@@ -71,14 +71,14 @@ export const createBooking = async (req, res) => {
             quantity: 1
         }]
 
-        // Checkout session
+        // Checkout session (defiend a session for payment)
         const session = await stripeInstance.checkout.sessions.create({
             success_url: `${origin}/loading/my_bookings`,
             cancel_url: `${origin}/my_bookings`,
             line_items: line_items,
             mode: "payment",
             metadata: {
-                bookingId: createBooking._id.toString(),
+                bookingId: createBooking._id.toString(), // Important: This is the booking id that will be used to update the booking status (Stripe hook will get bookingId from metadata)
             },
             expires_at: Math.floor(Date.now() / 1000) + 30 * 60, // 30 minutes
         })
