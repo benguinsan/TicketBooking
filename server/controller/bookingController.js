@@ -73,8 +73,8 @@ export const createBooking = async (req, res) => {
 
         // Checkout session (defiend a session for payment)
         const session = await stripeInstance.checkout.sessions.create({
-            success_url: `${origin}/loading/my_bookings`,
-            cancel_url: `${origin}/my_bookings`,
+            success_url: `${origin}/loading/my-bookings`,
+            cancel_url: `${origin}/my-bookings`,
             line_items: line_items,
             mode: "payment",
             metadata: {
@@ -85,6 +85,14 @@ export const createBooking = async (req, res) => {
 
         createBooking.paymentLink = session.url;
         await createBooking.save();
+
+        // Inngest scheduler function to check payment status after 10m
+        await inngest.send({
+            name: "app/checkpayment",
+            data: {
+                bookingId: createBooking._id.toString(), // Important: This is the booking id that will be used to check payment status (Inngest function will get bookingId from data)
+            }
+        })
 
         res.json({success: true, message: "Booking created successfully", url: session.url});
    

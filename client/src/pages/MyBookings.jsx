@@ -44,7 +44,7 @@ const MyBooking = () => {
   return !isLoading ? (
     <div className='relative px-6 md:px-16 lg:px-40 pt-30 md:pt-40 min-h-[80vh]'>
       <BlurCircle top="100px" left="100px" />
-      <div className='relative z-10'>
+      <div className='relative -z-20'>
         <BlurCircle top="0" left="600px" />
       </div>
       <h1 className='text-lg font-semibold mb-4'>My Bookings</h1>
@@ -64,7 +64,7 @@ const MyBooking = () => {
               <div className='flex flex-col md:items-end md:text-right justify-between p-4'>
                 <div className='flex items-center gap-4'>
                   <p className='text-lg font-semibold mb-3'>{currency}{item.amount}</p>
-                  {!item.isPaid && <Link to={item.paymentLink}><Button classContainer='bg-primary px-4 py-1.5 mb-3 text-sm rounded-full font-medium cursor-pointer' title="Pay Now"/></Link>}
+                  {!item.isPaid && <Button title="Pay now" classContainer='bg-primary px-4 py-1.5 mb-3 text-sm rounded-full font-medium hover:cursor-pointer' onClick={() => window.location.href = item.paymentLink}/>}
                 </div>
                 <div className='text-sm'>
                   <p><span className='text-gray-400'>Total Tickets: </span>{item.bookedSeats.length}</p>

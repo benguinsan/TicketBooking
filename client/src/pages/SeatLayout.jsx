@@ -1,7 +1,6 @@
 import React from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
-import { dummyShowsData, dummyDateTimeData} from '../assets/assets'
 import Loading from '../components/Loading'
 import timeFormat from '../lib/timeFormat'
 import { ClockIcon } from 'lucide-react'
