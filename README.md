@@ -74,22 +74,22 @@ npm install
 Create a `.env` file in the server directory:
 ```env
 # Database
-MONGODB_URI=your_mongodb_connection_string
+MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/quickshow?retryWrites=true&w=majority
 
 # Authentication
-CLERK_SECRET_KEY=your_clerk_secret_key
+CLERK_SECRET_KEY=sk_test_your_clerk_secret_key_here
 
 # Payment
-STRIPE_SECRET_KEY=your_stripe_secret_key
-STRIPE_WEBHOOK_SECRET=your_stripe_webhook_secret
+STRIPE_SECRET_KEY=sk_test_your_stripe_secret_key_here
+STRIPE_WEBHOOK_SECRET=whsec_your_stripe_webhook_secret_here
 
 # Email
-STMP_USER=your_brevo_email
-STMP_PASS=your_brevo_smtp_key
+STMP_USER=your-email@domain.com
+STMP_PASS=your_brevo_smtp_key_here
 
 # Inngest
-INNGEST_EVENT_KEY=your_inngest_event_key
-INNGEST_SIGNING_KEY=your_inngest_signing_key
+INNGEST_EVENT_KEY=your_inngest_event_key_here
+INNGEST_SIGNING_KEY=your_inngest_signing_key_here
 ```
 
 ### 3. Frontend Setup
@@ -100,9 +100,15 @@ npm install
 
 Create a `.env` file in the client directory:
 ```env
-VITE_CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
+# Authentication
+VITE_CLERK_PUBLISHABLE_KEY=pk_test_your_clerk_publishable_key_here
+
+# App Configuration
 VITE_CURRENCY=$
-VITE_IMAGE_BASE_URL=your_image_base_url
+VITE_IMAGE_BASE_URL=https://image.tmdb.org/t/p/w500
+
+# API Configuration
+VITE_API_BASE_URL=http://localhost:3000/api
 ```
 
 ### 4. Run the Application
@@ -155,21 +161,46 @@ npm run dev
 
 ## ⚙️ Configuration
 
-### Stripe Webhook Setup
-1. Create a webhook endpoint in your Stripe dashboard
-2. Set the endpoint URL to: `https://yourdomain.com/api/stripe`
-3. Select events: `payment_intent.succeeded`
-4. Copy the webhook secret to your `.env` file
+### Database Setup (MongoDB Atlas)
+1. Create a MongoDB Atlas account at [mongodb.com](https://www.mongodb.com/atlas)
+2. Create a new cluster
+3. Create a database user with read/write permissions
+4. Whitelist your IP address
+5. Get your connection string and replace `<username>`, `<password>`, and `<dbname>`
+
+### Stripe Setup
+1. Create a Stripe account at [stripe.com](https://stripe.com)
+2. Get your **Secret Key** from Dashboard → Developers → API keys
+3. Create a webhook endpoint:
+   - URL: `https://yourdomain.com/api/stripe`
+   - Events: `payment_intent.succeeded`
+   - Copy the **Webhook Secret**
+
+### Clerk Authentication Setup
+1. Create a Clerk account at [clerk.com](https://clerk.com)
+2. Create a new application
+3. Get your **Publishable Key** from Dashboard → API Keys (for frontend)
+4. Get your **Secret Key** from Dashboard → API Keys (for backend)
+5. Configure authentication methods (Email, Google, etc.)
+
+### Frontend Configuration
+1. **Clerk Publishable Key**: Use the publishable key (starts with `pk_test_`) for the frontend
+2. **Currency**: Set your preferred currency symbol (e.g., `$`, `€`, `£`)
+3. **Image Base URL**: Use TMDB image API or your own image hosting service
+4. **API Base URL**: Set to your backend server URL (use `http://localhost:3000/api` for development)
 
 ### Brevo Email Setup
-1. Create a Brevo account
-2. Generate an SMTP key
-3. Add your email and SMTP key to the `.env` file
+1. Create a Brevo account at [brevo.com](https://brevo.com)
+2. Go to Settings → SMTP & API
+3. Generate a new **SMTP Key**
+4. Use your Brevo email as `STMP_USER`
+5. Use the SMTP key as `STMP_PASS`
 
-### Clerk Authentication
-1. Create a Clerk application
-2. Configure authentication settings
-3. Add your keys to both frontend and backend `.env` files
+### Inngest Setup
+1. Create an Inngest account at [inngest.com](https://inngest.com)
+2. Create a new app
+3. Get your **Event Key** and **Signing Key** from the dashboard
+4. These are used for background job processing
 
 ## 📚 API Documentation
 
