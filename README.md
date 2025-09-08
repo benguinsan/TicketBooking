@@ -112,8 +112,6 @@ VITE_API_BASE_URL=http://localhost:3000/api
 ```
 
 ### 4. Run the Application
-
-#### Option 1: Run Both Client and Server Separately
 ```bash
 # Terminal 1 - Start backend server
 cd server
@@ -121,36 +119,6 @@ npm run server
 
 # Terminal 2 - Start frontend development server
 cd client
-npm run dev
-```
-
-#### Option 2: Run with Concurrently (Recommended)
-```bash
-# Install concurrently globally
-npm install -g concurrently
-
-# Run both client and server from root directory
-concurrently "cd server && npm run server" "cd client && npm run dev"
-```
-
-#### Option 3: Using npm scripts (Add to root package.json)
-```json
-{
-  "scripts": {
-    "dev": "concurrently \"cd server && npm run server\" \"cd client && npm run dev\"",
-    "install-all": "cd server && npm install && cd ../client && npm install",
-    "build": "cd client && npm run build",
-    "server": "cd server && npm run server"
-  }
-}
-```
-
-Then run:
-```bash
-# Install all dependencies
-npm run install-all
-
-# Start both client and server
 npm run dev
 ```
 
