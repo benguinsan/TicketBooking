@@ -15,8 +15,6 @@ const MyBooking = () => {
   const [bookings, setBookings] = useState([])
   const [isLoading, setIsLoading] = useState(true)
 
-  console.log(bookings)
-
   const getBookings = async () => {
     try {
       const {data} = await axios.get('/api/user/bookings', {

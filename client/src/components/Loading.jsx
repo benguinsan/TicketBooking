@@ -4,8 +4,6 @@ import { useEffect } from "react"
 const Loading = () => {
   const {nextUrl} = useParams()
 
-  console.log(nextUrl)
-  
   const navigate = useNavigate()
 
   useEffect(() => {
