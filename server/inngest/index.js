@@ -96,81 +96,106 @@ const sendBookingConfirmationEmail = inngest.createFunction(
 
         await sendEmail({
             to: booking.user.email,
-            subject: `Payment confirmation: ${booking.show.movie.title} booked!`,
+            subject: `Payment Confirmed: ${booking.show.movie.title} - Booking #${booking._id}`,
             body: `
-                <html>
-                <head>
-                    <meta charset="utf-8">
-                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                </head>
-                <body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f4f4;">
-                    <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
-                        
-                        <!-- Header -->
-                        <div style="background: linear-gradient(135deg, #F84565 0%, #D63854 100%); padding: 30px; text-align: center;">
-                            <h1 style="color: white; margin: 0; font-size: 28px; font-weight: 600;">🎬 Booking Confirmed!</h1>
-                            <p style="color: rgba(255,255,255,0.9); margin: 10px 0 0 0; font-size: 16px;">Your movie ticket is ready</p>
-                        </div>
-                        
-                        <!-- Content -->
-                        <div style="padding: 40px 30px;">
-                            <div style="text-align: center; margin-bottom: 30px;">
-                                <h2 style="color: #333; margin: 0 0 10px 0; font-size: 24px;">${booking.show.movie.title}</h2>
-                                <p style="color: #666; margin: 0; font-size: 16px;">Thank you for your booking!</p>
-                            </div>
-                            
-                            <!-- Movie Details Card -->
-                            <div style="background-color: #f8f9fa; border-radius: 12px; padding: 25px; margin-bottom: 25px; border-left: 4px solid #F84565;">
-                                <h3 style="color: #333; margin: 0 0 20px 0; font-size: 18px; font-weight: 600;"> Booking Details</h3>
-                                
-                                <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
-                                    <span style="color: #666; font-weight: 500;">Booking ID:</span>
-                                    <span style="color: #333; font-weight: 600;">${booking._id}</span>
-                                </div>
-                                
-                                <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
-                                    <span style="color: #666; font-weight: 500;">Date & Time:</span>
-                                    <span style="color: #333; font-weight: 600;">${new Date(booking.show.showDateTime).toLocaleDateString()} at ${new Date(booking.show.showDateTime).toLocaleTimeString()}</span>
-                                </div>
-                                
-                                <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
-                                    <span style="color: #666; font-weight: 500;">Seats:</span>
-                                    <span style="color: #333; font-weight: 600;">${booking.bookedSeats.join(', ')}</span>
-                                </div>
-                                
-                                <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
-                                    <span style="color: #666; font-weight: 500;">Total Tickets:</span>
-                                    <span style="color: #333; font-weight: 600;">${booking.bookedSeats.length}</span>
-                                </div>
-                                
-                                <div style="display: flex; justify-content: space-between; margin-bottom: 0;">
-                                    <span style="color: #666; font-weight: 500;">Amount:</span>
-                                    <span style="color: #F84565; font-weight: 700; font-size: 18px;">$${booking.amount}</span>
-                                </div>
-                            </div>
-                            
-                            <!-- Footer Message -->
-                            <div style="text-align: center; padding-top: 20px; border-top: 1px solid #eee;">
-                                <p style="color: #666; margin: 0; font-size: 14px; line-height: 1.6;">
-                                    Please arrive 15 minutes before the show time.<br>
-                                    Have a great movie experience! 🍿
-                                </p>
-                            </div>
-                        </div>
-                        
-                        <!-- Footer -->
-                        <div style="background-color: #f8f9fa; padding: 20px; text-align: center; border-top: 1px solid #eee;">
-                            <p style="color: #999; margin: 0; font-size: 12px;">
-                                © 2024 QuickShow. All rights reserved.
-                            </p>
+        <html>
+        <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        </head>
+        <body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f4f4;">
+            <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+                
+                <!-- Header -->
+                <div style="background: linear-gradient(135deg, #F84565 0%, #D63854 100%); padding: 30px; text-align: center;">
+                    <h1 style="color: white; margin: 0; font-size: 28px; font-weight: 600;">✅ Payment Confirmed!</h1>
+                    <p style="color: rgba(255,255,255,0.9); margin: 10px 0 0 0; font-size: 16px;">Your movie tickets are ready</p>
+                </div>
+                
+                <!-- Content -->
+                <div style="padding: 40px 30px;">
+                    <div style="text-align: center; margin-bottom: 30px;">
+                        <h2 style="color: #333; margin: 0 0 10px 0; font-size: 24px;">${booking.show.movie.title}</h2>
+                        <p style="color: #666; margin: 0; font-size: 16px;">Thank you for your payment!</p>
+                    </div>
+                    
+                    <!-- Success Badge -->
+                    <div style="text-align: center; margin-bottom: 30px;">
+                        <div style="background-color: #d4edda; border: 1px solid #c3e6cb; border-radius: 8px; padding: 15px; display: inline-block;">
+                            <span style="color: #155724; font-weight: 600; font-size: 16px;">
+                                 Payment Successful
+                            </span>
                         </div>
                     </div>
-                </body>
-                </html>
-            `
-        })
-    }
-)
+                    
+                    <!-- Movie Details Card -->
+                    <div style="background-color: #f8f9fa; border-radius: 12px; padding: 25px; margin-bottom: 25px; border-left: 4px solid #F84565;">
+                        <h3 style="color: #333; margin: 0 0 20px 0; font-size: 18px; font-weight: 600;"> Booking Details</h3>
+                        
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+                            <span style="color: #666; font-weight: 500;">Booking ID:</span>
+                            <span style="color: #333; font-weight: 600;">#${booking._id}</span>
+                        </div>
+                        
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+                            <span style="color: #666; font-weight: 500;">Movie:</span>
+                            <span style="color: #333; font-weight: 600;">${booking.show.movie.title}</span>
+                        </div>
+                        
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+                            <span style="color: #666; font-weight: 500;">Date & Time:</span>
+                            <span style="color: #333; font-weight: 600;">${new Date(booking.show.showDateTime).toLocaleDateString()} at ${new Date(booking.show.showDateTime).toLocaleTimeString()}</span>
+                        </div>
+                        
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+                            <span style="color: #666; font-weight: 500;">Seats:</span>
+                            <span style="color: #333; font-weight: 600;">${booking.bookedSeats.join(', ')}</span>
+                        </div>
+                        
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+                            <span style="color: #666; font-weight: 500;">Total Tickets:</span>
+                            <span style="color: #333; font-weight: 600;">${booking.bookedSeats.length}</span>
+                        </div>
+                        
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0;">
+                            <span style="color: #666; font-weight: 500;">Amount Paid:</span>
+                            <span style="color: #28a745; font-weight: 700; font-size: 18px;">$${booking.amount}</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Important Notice -->
+                    <div style="background-color: #fff3cd; border: 1px solid #ffeaa7; border-radius: 8px; padding: 20px; margin-bottom: 25px;">
+                        <h4 style="color: #856404; margin: 0 0 10px 0; font-size: 16px; font-weight: 600;">📋 Important Information</h4>
+                        <ul style="color: #856404; margin: 0; padding-left: 20px; font-size: 14px; line-height: 1.6;">
+                            <li>Please arrive 15 minutes before the show time</li>
+                            <li>Bring a valid ID for verification</li>
+                            <li>Keep this email as your ticket confirmation</li>
+                            <li>Contact us if you have any questions</li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Footer Message -->
+                    <div style="text-align: center; padding-top: 20px; border-top: 1px solid #eee;">
+                        <p style="color: #666; margin: 0; font-size: 14px; line-height: 1.6;">
+                            We hope you enjoy the movie! 🍿<br>
+                            <strong>QuickShow Team</strong>
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- Footer -->
+                <div style="background-color: #f8f9fa; padding: 20px; text-align: center; border-top: 1px solid #eee;">
+                    <p style="color: #999; margin: 0; font-size: 12px;">
+                        © 2024 QuickShow. All rights reserved.<br>
+                        This is an automated email. Please do not reply.
+                    </p>
+                </div>
+            </div>
+        </body>
+        </html>
+    `
+    });
+})
 
 
 // Create an empty array where we'll export future Inngest functions
