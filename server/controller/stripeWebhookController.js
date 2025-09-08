@@ -1,5 +1,6 @@
 import stripe from "stripe";
 import Booking from "../models/Booking.js";
+import {inngest} from "../inngest/index.js";
 
 export const stripeWebhook = async (req, res) => {
     const stripeInstance = new stripe(process.env.STRIPE_SECRET_KEY);
@@ -7,7 +8,7 @@ export const stripeWebhook = async (req, res) => {
     const sig = req.headers['stripe-signature'];
     
     let event;
-    
+
     try {
         event = stripeInstance.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
     } catch(error) {
@@ -25,12 +26,23 @@ export const stripeWebhook = async (req, res) => {
                 const {bookingId} = session.metadata;
 
                 await Booking.findByIdAndUpdate(bookingId, {isPaid: "true", paymentLink: ""});
+
+                // Inngest function to send email to user when user books a ticket
+                await inngest.send({
+                    name: "app/show.booked",
+                    data: {
+                        bookingId
+                    }
+                })
+
                 break;
             }
             default: {
                 console.log("Unhandled event type", event.type);
             }
         }
+
+   
         res.json({received: true});
     } catch(error) {
         return res.status(400).json({success: false, message: error.message});
